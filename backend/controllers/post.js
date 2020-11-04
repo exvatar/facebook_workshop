@@ -15,11 +15,18 @@ const createPost = async (req, res) => {
     } else {
         res.status(400).send("Not found user ID");
     }
-
 };
 
-const deletePost = (req, res) => {
+const deletePost = async (req, res) => {
+    const targetId = req.params.id;
+    const targetPost = await db.Post.findOne({ where: { id: targetId } });
 
+    if (targetPost && targetPost.user_id === req.user.id) { //เช็คว่าเป็นเจ้าของโพสจริงไหม
+        targetPost.destroy();
+        res.status(200).send({ message: `Post ID: ${targetId} has been deleted` });
+    } else {
+        res.status(404).send({ message: `Post ID: ${targetId}` });
+    }
 };
 
 const editPost = async (req, res) => {
@@ -33,12 +40,14 @@ const editPost = async (req, res) => {
     }
 };
 
-const getAllMyPost = (req, res) => {
-
+const getAllMyPost = async (req, res) => {
+    const allMyPost = await db.Post.findAll({ where: { user_id: req.user.id } })
+    res.status(200).send(allMyPost)
 };
 
-const getMyFeed = (req, res) => {
-    // DONT DO 
+const getMyFeed = async (req, res) => {
+    const myFeeds = await db.Post.findAll()
+    res.status(200).send(myFeeds)
 };
 
 module.exports = {
