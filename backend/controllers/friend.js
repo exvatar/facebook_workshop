@@ -1,7 +1,7 @@
 const db = require('../models');
 
 const addFriend = (req,res) => {
-
+ 
 }
 
 const acceptFriend = (req,res) => {
