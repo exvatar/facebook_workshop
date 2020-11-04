@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("./config/passport");
 const express = require('express');
 const db = require('./models')
 const userRouter = require('./routes/user');

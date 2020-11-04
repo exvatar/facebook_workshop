@@ -1,20 +1,20 @@
 const passport = require("passport")
-const { Strategy,ExtractJwt} = require("passport-kwt")
+const { Strategy, ExtractJwt } = require("passport-jwt")
 const db = require("../models")
 
 const options = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: "facebook"
+    secretOrKey: process.env.SECRET
 };
 
-const jwtStrategy = new Strategy(options, async (payload, done) =>{
-    const targetUser = await db.User.findOne({where:{ id: payload.id}});
+const JWTStrategy = new Strategy(options, async (payload, done) => {
+    const targetUser = await db.User.findOne({ where: { id: payload.id } });
 
-    if(targetUser) {
+    if (targetUser) {
         done(null, targetUser);
-    }else{
-        done(null,false);
+    } else {
+        done(null, false);
     }
-})
+});
 
-passport.use("jwt", jwtStrategy)
+passport.use("jwt", JWTStrategy)
